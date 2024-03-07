@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ClientAuthRepository extends JpaRepository<User, String> {
+public interface UserAuthRepository extends JpaRepository<User, String> {
 
   Optional<User> findByUsername(String username);
 
@@ -14,4 +14,5 @@ public interface ClientAuthRepository extends JpaRepository<User, String> {
 
   void deleteById(UUID id);
 
+  Optional<User> findByEmail(String email);
 }

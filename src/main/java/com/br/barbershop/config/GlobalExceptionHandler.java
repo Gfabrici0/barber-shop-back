@@ -1,5 +1,6 @@
 package com.br.barbershop.config;
 
+import com.br.barbershop.exception.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,11 @@ public class GlobalExceptionHandler {
     return ResponseEntity
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
       .body(apiError);
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
   }
 
   static class ApiError {

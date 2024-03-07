@@ -10,21 +10,20 @@ import java.time.ZoneOffset;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class TokenManager {
 
   @Value("${api.security.token.secret}")
   private String secret;
 
-  public String generateToken(String username) {
+  public String generateToken(String email) {
     return JWT.create()
-      .withSubject(username)
+      .withSubject(email)
       .withExpiresAt(expirationDate())
       .sign(Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8)));
   }
 
-  public String validateTokenAndGetUsername(String token) {
+  public String validateTokenAndGetEmail(String token) {
     Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
     DecodedJWT jwt = JWT.require(algorithm)
         .build()

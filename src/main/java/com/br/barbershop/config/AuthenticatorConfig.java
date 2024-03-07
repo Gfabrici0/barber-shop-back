@@ -33,7 +33,7 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
     try {
       UserCredentials credentials = new ObjectMapper().readValue(request.getInputStream(), UserCredentials.class);
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-          credentials.username(), credentials.password());
+          credentials.email(), credentials.password());
       return authenticationManager.authenticate(authenticationToken);
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -46,9 +46,9 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
                                           FilterChain chain,
                                           Authentication authResult) throws IOException {
     UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-    String username = userDetails.getUsername();
+    String email = userDetails.getUsername();
 
-    String token = tokenManager.generateToken(username);
+    String token = tokenManager.generateToken(email);
 
     response.addHeader("Authorization", "Bearer " + token);
     response.setContentType("application/json");

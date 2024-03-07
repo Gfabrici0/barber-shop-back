@@ -1,8 +1,8 @@
 package com.br.barbershop.integration;
 
-import com.br.barbershop.controller.ClientAuthController;
+import com.br.barbershop.controller.UserAuthController;
 import com.br.barbershop.helpers.TestContext;
-import com.br.barbershop.model.DTO.DataRegisterClient;
+import com.br.barbershop.model.DTO.DataRegisterUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,17 +20,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-public class ClientAuthStep {
+public class UserAuthStep {
 
   private MockMvc mockMvc;
   private MvcResult mvcResult;
-  private DataRegisterClient validClient;
+  private DataRegisterUser validClient;
   @Autowired
-  private ClientAuthController controller;
+  private UserAuthController controller;
 
   @Autowired
   private TestContext testContext;
@@ -47,12 +46,12 @@ public class ClientAuthStep {
   /* Test to validate user creation */
   @Given("Valid data")
   public void valid_data() {
-    validClient = new DataRegisterClient("Tawdrysson", "zEu*ja*WA6", "07471013028", "tawdrysson@hotmail.com", "2004-09-13", "Largo da Galícia", "80430-154", "Curitiba");
+    validClient = new DataRegisterUser("tawdrysson@hotmail.com", "Tawdrysson Vowoy Satuon", "zEu*ja*WA6", "07471013028", "2004-09-13", "Largo da Galícia", "80430-154", "Curitiba");
   }
   @When("The registration request is sent")
   public void the_registration_request_is_sent() throws Exception {
     String jsonContent = new ObjectMapper().writeValueAsString(validClient);
-    this.mvcResult = mockMvc.perform(post("/auth/client")
+    this.mvcResult = mockMvc.perform(post("/auth/user")
         .contentType(MediaType.APPLICATION_JSON)
         .content(jsonContent))
     .andReturn();
@@ -75,7 +74,7 @@ public class ClientAuthStep {
   }
   @When("I request a list of all clients")
   public void i_request_a_list_of_all_clients() throws Exception {
-    this.mvcResult = mockMvc.perform(get("/auth/client")
+    this.mvcResult = mockMvc.perform(get("/auth/user")
             .contentType(MediaType.APPLICATION_JSON))
         .andReturn();
   }
@@ -101,7 +100,7 @@ public class ClientAuthStep {
   }
   @When("I request the client details by this ID")
   public void i_request_the_client_details_by_this_id() throws Exception {
-    this.mvcResult = mockMvc.perform(get("/auth/client/" + userUUID)
+    this.mvcResult = mockMvc.perform(get("/auth/user/" + userUUID)
             .contentType(MediaType.APPLICATION_JSON))
         .andReturn();
   }
@@ -118,7 +117,7 @@ public class ClientAuthStep {
   }
   @When("a request to delete the customer is sent")
   public void a_request_to_delete_the_customer_is_sent() throws Exception {
-    this.mvcResult = mockMvc.perform(delete("/auth/client/" + userUUID)
+    this.mvcResult = mockMvc.perform(delete("/auth/user/" + userUUID)
             .contentType(MediaType.APPLICATION_JSON))
         .andReturn();
   }

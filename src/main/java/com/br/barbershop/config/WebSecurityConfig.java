@@ -33,7 +33,7 @@ public class WebSecurityConfig {
         .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> authorize
-         .requestMatchers(HttpMethod.POST, "/auth/client").permitAll()
+         .requestMatchers(HttpMethod.POST, "auth/user").permitAll()
           .anyRequest().authenticated())
         .addFilter(new AuthenticatorConfig(authenticationManager, tokenManager))
         .addFilterBefore(new TokenValidationFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);

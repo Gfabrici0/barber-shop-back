@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
 public class TokenValidationFilter extends OncePerRequestFilter {
 
   private final TokenManager tokenManager;
@@ -29,10 +28,10 @@ public class TokenValidationFilter extends OncePerRequestFilter {
     if (header != null && header.startsWith("Bearer ")) {
       try {
         String token = header.substring(7);
-        String username = tokenManager.validateTokenAndGetUsername(token);
+        String email = tokenManager.validateTokenAndGetEmail(token);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-          UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, null);
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+          UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, null);
           SecurityContextHolder.getContext().setAuthentication(auth);
         }
       } catch (TokenExpiredException tokenExpiredException) {

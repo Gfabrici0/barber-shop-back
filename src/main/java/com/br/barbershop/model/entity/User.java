@@ -1,13 +1,11 @@
 package com.br.barbershop.model.entity;
 
-import com.br.barbershop.model.DTO.DataRegisterClient;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.util.Collection;
-import java.util.UUID;
+import com.br.barbershop.model.DTO.DataRegisterUser;
+import com.br.barbershop.model.DTO.DataUpdateUser;
+import jakarta.persistence.*;
+
+import java.util.*;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,39 +31,54 @@ public class User implements UserDetails {
   @Column(name = "id", updatable = false, nullable = false)
   private UUID id;
 
-  @Column(name = "username", unique = true, nullable = false)
+  @Column(name = "username", nullable = false)
   private String username;
 
   @Column(name = "password", nullable = false)
   private String password;
 
+  @Column(name = "document", unique = true, nullable = false)
+  private String document;
+
+  @Column(name = "phone_number", nullable = false)
+  private String phoneNumber;
+
   @Column(name = "email", unique = true, nullable = false)
   private String email;
 
-  @Column(name = "date_of_birth")
-  private String dateOfBirth;
+  @Column(name = "date_of_birth", nullable = false)
+  private Date dateOfBirth;
 
-  @Column(name = "address_street")
-  private String addressStreet;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<UserAddress> userAddresses = new ArrayList<>();
 
-  @Column(name = "address_number")
-  private String addressNumber;
+  public User(DataRegisterUser dataRegisterUser) {
+    email = dataRegisterUser.email();
+    username = dataRegisterUser.username();
+    password = new BCryptPasswordEncoder().encode(dataRegisterUser.password());
+    document = dataRegisterUser.document();
+    phoneNumber = dataRegisterUser.phoneNumber();
+    dateOfBirth = dataRegisterUser.dateOfBirth();
+    addAddress(new Address(dataRegisterUser.dataAdress()));
+  }
 
-  @Column(name = "address_city")
-  private String addressCity;
+  public void updateUser(DataUpdateUser dataUpdateUser) {
+    if(dataUpdateUser.dateOfBirth() != null) {
+      this.dateOfBirth = dataUpdateUser.dateOfBirth();
+    }
+  }
 
-  @Column(name = "document")
-  private String document;
+  public void addAddress(Address address) {
+    UserAddress userAddress = new UserAddress();
+    userAddress.setUser(this);
+    userAddress.setAddress(address);
+    this.userAddresses.add(userAddress);
+  }
 
-  public User(DataRegisterClient dataRegisterClient) {
-    username = dataRegisterClient.username();
-    password = new BCryptPasswordEncoder().encode(dataRegisterClient.password());
-    document = dataRegisterClient.document();
-    email = dataRegisterClient.email();
-    dateOfBirth = dataRegisterClient.dateOfBirth();
-    addressStreet = dataRegisterClient.addressStreet();
-    addressNumber = dataRegisterClient.addressNumber();
-    addressCity = dataRegisterClient.addressCity();
+  /* Overrides the getUsername method of the UserDetails class to use email for authentication */
+  @Override
+  public String getUsername() {
+    return getEmail();
   }
 
   @Override
@@ -75,22 +88,22 @@ public class User implements UserDetails {
 
   @Override
   public boolean isAccountNonExpired() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isAccountNonLocked() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isCredentialsNonExpired() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isEnabled() {
-    return false;
+    return true;
   }
 
 }
