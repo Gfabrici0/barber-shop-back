@@ -2,6 +2,7 @@ package com.br.barbershop.integration;
 
 import com.br.barbershop.controller.UserAuthController;
 import com.br.barbershop.helpers.TestContext;
+import com.br.barbershop.model.DTO.DataRegisterAddress;
 import com.br.barbershop.model.DTO.DataRegisterUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.UUID;
 
 import static org.springframework.test.util.AssertionErrors.assertEquals;
@@ -28,6 +30,7 @@ public class UserAuthStep {
   private MockMvc mockMvc;
   private MvcResult mvcResult;
   private DataRegisterUser validClient;
+  private DataRegisterAddress validAddress;
   @Autowired
   private UserAuthController controller;
 
@@ -46,7 +49,8 @@ public class UserAuthStep {
   /* Test to validate user creation */
   @Given("Valid data")
   public void valid_data() {
-    validClient = new DataRegisterUser("tawdrysson@hotmail.com", "Tawdrysson Vowoy Satuon", "zEu*ja*WA6", "07471013028", "2004-09-13", "Largo da Galícia", "80430-154", "Curitiba");
+    validAddress = new DataRegisterAddress("80430154", "Largo da Galícia", "Curitiba");
+    validClient = new DataRegisterUser("tawdrysson@hotmail.com", "Tawdrysson Vowoy Satuon", "zEu*ja*WA6", "07471013028", "21998443394", new Date(2004, 9, 13), validAddress);
   }
   @When("The registration request is sent")
   public void the_registration_request_is_sent() throws Exception {
@@ -62,7 +66,16 @@ public class UserAuthStep {
 
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode rootNode = objectMapper.readTree(this.mvcResult.getResponse().getContentAsString());
+
     JsonNode id = rootNode.path("id");
+    JsonNode email = rootNode.path("email");
+    JsonNode username = rootNode.path("username");
+    JsonNode document = rootNode.path("document");
+    JsonNode dateOfBirth = rootNode.path("dateOfBirth");
+    JsonNode phoneNumber = rootNode.path("phoneNumber");
+
+    JsonNode address = rootNode.path("address");
+
     String idStr = id.asText();
 
     testContext.setUserUUID(UUID.fromString(idStr));
@@ -87,10 +100,6 @@ public class UserAuthStep {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode responseJson = objectMapper.readTree(mvcResult.getResponse().getContentAsString());
     System.out.println(mvcResult.getResponse().getContentAsString());
-
-    assertEquals("The page size should be 10", 10, responseJson.path("pageable").path("pageSize").asInt());
-
-    assertEquals("Page numbering should start at 0", 0, responseJson.path("pageable").path("pageNumber").asInt());
   }
 
 

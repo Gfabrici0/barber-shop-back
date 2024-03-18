@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Getter
 @Setter
-@Table(name = "user_addresses")
+@Table(name = "user_address")
 public class UserAddress {
 
   @Id

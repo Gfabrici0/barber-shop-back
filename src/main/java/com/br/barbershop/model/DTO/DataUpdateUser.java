@@ -1,11 +1,12 @@
 package com.br.barbershop.model.DTO;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Pattern;
 
-import java.util.Date;
+import java.util.List;
 
 public record DataUpdateUser(
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    Date dateOfBirth
+    @Pattern(regexp = "^\\d{2}\\d{8,9}$", message = "Número de telefone celular inválido.")
+    String phoneNumber,
+    List<DataUpdateAddress> address
 ) {
 }

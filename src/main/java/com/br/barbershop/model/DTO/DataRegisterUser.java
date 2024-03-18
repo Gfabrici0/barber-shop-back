@@ -20,12 +20,13 @@ public record DataRegisterUser(
     @NotBlank
     String document,
     @NotBlank
+    @Pattern(regexp = "^\\d{2}\\d{8,9}$", message = "Número de telefone celular inválido.")
     String phoneNumber,
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
     Date dateOfBirth,
     @NotNull
     @Valid
-    DataAdress dataAdress
+    DataRegisterAddress address
 ) {
 }

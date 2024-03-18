@@ -1,6 +1,8 @@
 package com.br.barbershop.model.entity;
 
+import com.br.barbershop.help.StringUtil;
 import com.br.barbershop.model.DTO.DataRegisterUser;
+import com.br.barbershop.model.DTO.DataUpdateAddress;
 import com.br.barbershop.model.DTO.DataUpdateUser;
 import jakarta.persistence.*;
 
@@ -21,7 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "\"user\"")
 @EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
 
@@ -59,12 +61,19 @@ public class User implements UserDetails {
     document = dataRegisterUser.document();
     phoneNumber = dataRegisterUser.phoneNumber();
     dateOfBirth = dataRegisterUser.dateOfBirth();
-    addAddress(new Address(dataRegisterUser.dataAdress()));
+    addAddress(new Address(dataRegisterUser.address()));
   }
 
   public void updateUser(DataUpdateUser dataUpdateUser) {
-    if(dataUpdateUser.dateOfBirth() != null) {
-      this.dateOfBirth = dataUpdateUser.dateOfBirth();
+    if(dataUpdateUser.phoneNumber() != null && !dataUpdateUser.phoneNumber().isEmpty()){
+      this.setPhoneNumber(dataUpdateUser.phoneNumber());
+    }
+    if(dataUpdateUser.address() != null && !dataUpdateUser.address().isEmpty()) {
+      for(DataUpdateAddress dataUpdateAddress : dataUpdateUser.address()) {
+        this.userAddresses.stream().filter(
+            updateAddress -> updateAddress.getAddress().getId().equals(dataUpdateAddress.id())
+        ).findFirst().ifPresent(ua -> ua.getAddress().updateAddress(dataUpdateAddress));
+      }
     }
   }
 
@@ -79,6 +88,18 @@ public class User implements UserDetails {
   @Override
   public String getUsername() {
     return getEmail();
+  }
+
+  public String getRealUsername(){
+    return this.username;
+  }
+
+  public String getFormattedDocument() {
+    return StringUtil.FormatCPF(this.document);
+  }
+
+  public String getFormattedPhoneNumber() {
+    return StringUtil.FormatPhoneNumber(this.phoneNumber);
   }
 
   @Override

@@ -1,6 +1,8 @@
 package com.br.barbershop.model.entity;
 
-import com.br.barbershop.model.DTO.DataAdress;
+import com.br.barbershop.help.StringUtil;
+import com.br.barbershop.model.DTO.DataRegisterAddress;
+import com.br.barbershop.model.DTO.DataUpdateAddress;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.UUID;
 
 @Entity
-@Table(name = "addresses")
+@Table(name = "address")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,9 +32,25 @@ public class Address {
   @Column(name = "address_city")
   private String addressCity;
 
-  public Address(DataAdress dataAdress) {
-    this.addressNumber = dataAdress.addressNumber();
-    this.addressStreet = dataAdress.addressStreet();
-    this.addressCity = dataAdress.addressCity();
+  public Address(DataRegisterAddress dataRegisterAddress) {
+    this.addressNumber = dataRegisterAddress.addressNumber();
+    this.addressStreet = dataRegisterAddress.addressStreet();
+    this.addressCity = dataRegisterAddress.addressCity();
+  }
+
+  public void updateAddress(DataUpdateAddress dataUpdateAddress) {
+    if (dataUpdateAddress.addressStreet() != null && !dataUpdateAddress.addressCity().isEmpty()) {
+      this.setAddressStreet(dataUpdateAddress.addressStreet());
+    }
+    if (dataUpdateAddress.addressNumber() != null && !dataUpdateAddress.addressNumber().isEmpty()) {
+      this.setAddressNumber(dataUpdateAddress.addressNumber());
+    }
+    if (dataUpdateAddress.addressCity() != null && !dataUpdateAddress.addressCity().isEmpty()) {
+      this.setAddressCity(dataUpdateAddress.addressCity());
+    }
+  }
+
+  public String getFormattedAddressNumber() {
+    return StringUtil.formatZipCode(addressNumber);
   }
 }

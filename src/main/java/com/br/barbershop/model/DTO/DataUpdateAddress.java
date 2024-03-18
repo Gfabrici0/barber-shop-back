@@ -1,15 +1,14 @@
 package com.br.barbershop.model.DTO;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public record DataAdress(
-    @NotBlank
-    @Pattern(regexp = "^\\d{5}-?\\d{3}$")
+import java.util.UUID;
+
+public record DataUpdateAddress(
+    UUID id,
+    @Pattern(regexp = "^\\d{5}\\d{3}$", message = "CEP não deve conter hífen")
     String addressNumber,
-    @NotBlank
     String addressStreet,
-    @NotBlank
     String addressCity
 ) {
 }
