@@ -1,7 +1,7 @@
 package com.br.barbershop.config;
 
-import com.br.barbershop.model.DTO.TokenResponse;
-import com.br.barbershop.model.DTO.UserCredentials;
+import com.br.barbershop.model.DTO.token.TokenResponse;
+import com.br.barbershop.model.DTO.user.UserCredentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

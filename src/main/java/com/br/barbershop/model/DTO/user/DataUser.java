@@ -1,9 +1,10 @@
-package com.br.barbershop.model.DTO;
+package com.br.barbershop.model.DTO.user;
 
+import com.br.barbershop.model.DTO.address.DataAddress;
 import com.br.barbershop.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ public record DataUser(
     String username,
     String document,
     @JsonFormat(pattern = "yyyy-MM-dd")
-    Date dateOfBirth,
+    LocalDate dateOfBirth,
     String phoneNumber,
     List<DataAddress> address
 ) {

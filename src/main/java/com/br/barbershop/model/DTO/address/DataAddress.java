@@ -1,4 +1,4 @@
-package com.br.barbershop.model.DTO;
+package com.br.barbershop.model.DTO.address;
 
 import com.br.barbershop.model.entity.Address;
 import jakarta.validation.constraints.Pattern;

@@ -1,9 +1,10 @@
 package com.br.barbershop.service;
 
 import com.br.barbershop.exception.UserNotFoundException;
-import com.br.barbershop.model.DTO.DataUser;
-import com.br.barbershop.model.DTO.DataRegisterUser;
-import com.br.barbershop.model.DTO.DataUpdateUser;
+import com.br.barbershop.model.DTO.user.DataUser;
+import com.br.barbershop.model.DTO.user.DataRegisterUser;
+import com.br.barbershop.model.DTO.user.DataUpdateUser;
+import com.br.barbershop.model.entity.Role;
 import com.br.barbershop.model.entity.User;
 import com.br.barbershop.repository.UserAuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,12 @@ public class UserAuthService {
   @Autowired
   private UserAuthRepository userAuthRepository;
 
+  @Autowired
+  private RoleService roleService;
+
   public User registerUser(DataRegisterUser dataRegisterUser) {
-    return userAuthRepository.save(new User(dataRegisterUser));
+    Role role = roleService.findByRole(dataRegisterUser.role().getRole());
+    return userAuthRepository.save(new User(dataRegisterUser, role));
   }
 
   public Page<DataUser> getAllUsers(Pageable pageable) {

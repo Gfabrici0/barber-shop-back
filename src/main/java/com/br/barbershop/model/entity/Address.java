@@ -1,34 +1,34 @@
 package com.br.barbershop.model.entity;
 
 import com.br.barbershop.help.StringUtil;
-import com.br.barbershop.model.DTO.DataRegisterAddress;
-import com.br.barbershop.model.DTO.DataUpdateAddress;
+import com.br.barbershop.model.DTO.address.DataRegisterAddress;
+import com.br.barbershop.model.DTO.address.DataUpdateAddress;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "address")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "address")
+@EqualsAndHashCode(of = "id")
 public class Address {
 
   @Id
-  @GeneratedValue(generator = "UUID")
-  @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-  @Column(name = "id", updatable = false, nullable = false)
+  @UuidGenerator
   private UUID id;
+
   @Column(name = "address_number")
   private String addressNumber;
+
   @Column(name = "address_street")
   private String addressStreet;
+
   @Column(name = "address_city")
   private String addressCity;
 

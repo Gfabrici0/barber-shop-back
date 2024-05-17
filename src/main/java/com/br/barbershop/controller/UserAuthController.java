@@ -1,8 +1,8 @@
 package com.br.barbershop.controller;
 
-import com.br.barbershop.model.DTO.DataUser;
-import com.br.barbershop.model.DTO.DataRegisterUser;
-import com.br.barbershop.model.DTO.DataUpdateUser;
+import com.br.barbershop.model.DTO.user.DataUser;
+import com.br.barbershop.model.DTO.user.DataRegisterUser;
+import com.br.barbershop.model.DTO.user.DataUpdateUser;
 import com.br.barbershop.model.entity.User;
 import com.br.barbershop.service.UserAuthService;
 import jakarta.validation.Valid;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController

@@ -1,5 +1,6 @@
-package com.br.barbershop.model.DTO;
+package com.br.barbershop.model.DTO.user;
 
+import com.br.barbershop.model.DTO.address.DataUpdateAddress;
 import jakarta.validation.constraints.Pattern;
 
 import java.util.List;

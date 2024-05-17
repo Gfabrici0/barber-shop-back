@@ -1,34 +1,33 @@
 package com.br.barbershop.model.entity;
 
 import jakarta.persistence.*;
-
-import java.util.*;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.UUID;
+
 @Entity
 @Getter
-@Table(name = "user_address")
+@Table(name = "barbershop_user")
 @EqualsAndHashCode(of = "id")
-public class UserAddress {
+public class BarbershopUser {
 
   @Id
   @UuidGenerator
   private UUID id;
 
   @ManyToOne
+  @JoinColumn(name = "barbershop_id")
+  private Barbershop barbershop;
+
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id")
   private User user;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "address_id")
-  private Address address;
-
-  UserAddress(User user, Address address) {
+  BarbershopUser(Barbershop barbershop, User user) {
+    this.barbershop = barbershop;
     this.user = user;
-    this.address = address;
   }
 
 }

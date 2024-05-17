@@ -2,8 +2,8 @@ package com.br.barbershop.integration;
 
 import com.br.barbershop.controller.UserAuthController;
 import com.br.barbershop.helpers.TestContext;
-import com.br.barbershop.model.DTO.DataRegisterAddress;
-import com.br.barbershop.model.DTO.DataRegisterUser;
+import com.br.barbershop.model.DTO.address.DataRegisterAddress;
+import com.br.barbershop.model.DTO.user.DataRegisterUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
