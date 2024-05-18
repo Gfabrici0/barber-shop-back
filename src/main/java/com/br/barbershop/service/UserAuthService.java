@@ -24,7 +24,7 @@ public class UserAuthService {
   private RoleService roleService;
 
   public User registerUser(DataRegisterUser dataRegisterUser) {
-    Role role = roleService.findByRole(dataRegisterUser.role().getRole());
+    Role role = roleService.findByRole(dataRegisterUser.role());
     return userAuthRepository.save(new User(dataRegisterUser, role));
   }
 
@@ -34,20 +34,22 @@ public class UserAuthService {
 
   public DataUser getUserById(UUID id) {
     return userAuthRepository.findById(id).map(DataUser::new)
-        .orElseThrow(() -> new UserNotFoundException("User not found"));
-  }
-
-  public void deleteUser(UUID userId) {
-    User user = userAuthRepository.findById(userId)
-        .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-    userAuthRepository.deleteById(user.getId());
+      .orElseThrow(() -> new UserNotFoundException("User not found"));
   }
 
   public void updateUser(UUID id, DataUpdateUser dataUpdateUser) {
     User user = userAuthRepository.findById(id)
         .orElseThrow(() -> new UserNotFoundException("User not found"));
+
     user.updateUser(dataUpdateUser);
+
     userAuthRepository.save(user);
+  }
+
+  public void deleteUser(UUID userId) {
+    User user = userAuthRepository.findById(userId)
+      .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+    userAuthRepository.deleteById(user.getId());
   }
 }

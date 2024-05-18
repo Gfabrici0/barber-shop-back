@@ -6,11 +6,12 @@ import com.br.barbershop.model.DTO.barbershop.DataRegisterBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataUpdateBarbershop;
 import com.br.barbershop.model.DTO.user.DataRegisterUser;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Table(name = "barbershop")
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Barbershop {
 
@@ -38,17 +41,11 @@ public class Barbershop {
   @Column(name = "email", unique = true, nullable = false)
   private String email;
 
-  @Column(name = "password", nullable = false)
-  private String password;
-
   @Column(name = "document", unique = true, nullable = false)
   private String document;
 
   @Column(name = "phone_number", nullable = false)
   private String phoneNumber;
-
-  @Column(name = "date_of_birth", nullable = false)
-  private LocalDate dateOfBirth;
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime created_at;
@@ -69,10 +66,8 @@ public class Barbershop {
     this.tradeName = dataRegisterBarbershop.tradeName();
     this.corporateName = dataRegisterBarbershop.corporateName();
     this.email = dataRegisterBarbershop.email();
-    this.password = dataRegisterBarbershop.password();
     this.document = dataRegisterBarbershop.document();
     this.phoneNumber = dataRegisterBarbershop.phoneNumber();
-    this.dateOfBirth = dataRegisterBarbershop.dateOfBirth();
     this.created_at = localDateTime;
     this.updated_at = localDateTime;
 

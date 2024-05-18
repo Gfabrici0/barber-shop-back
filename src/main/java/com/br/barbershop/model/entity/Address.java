@@ -4,9 +4,7 @@ import com.br.barbershop.help.StringUtil;
 import com.br.barbershop.model.DTO.address.DataRegisterAddress;
 import com.br.barbershop.model.DTO.address.DataUpdateAddress;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -16,6 +14,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "address")
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Address {
 

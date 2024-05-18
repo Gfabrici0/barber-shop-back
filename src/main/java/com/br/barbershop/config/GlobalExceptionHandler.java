@@ -21,10 +21,10 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException ex) {
-    List<DataErrorValidation> erros = ex.getFieldErrors().stream()
+    List<DataErrorValidation> errors = ex.getFieldErrors().stream()
         .map(DataErrorValidation::new)
         .toList();
-    return ResponseEntity.badRequest().body(erros);
+    return ResponseEntity.badRequest().body(errors);
   }
 
   @ExceptionHandler(Exception.class)

@@ -30,11 +30,13 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
     httpSecurity
-        .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .sessionManagement(configure -> configure.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> authorize
-         .requestMatchers(HttpMethod.POST, "auth/user").permitAll()
-          .anyRequest().authenticated())
+          .requestMatchers(HttpMethod.POST, "auth/user").permitAll()
+          .requestMatchers(HttpMethod.POST, "barbershop").permitAll()
+          .anyRequest().authenticated()
+        )
         .addFilter(new AuthenticatorConfig(authenticationManager, tokenManager))
         .addFilterBefore(new TokenValidationFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);
 

@@ -9,9 +9,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "\"user\"")
 @EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
@@ -49,7 +49,7 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserAddress> userAddresses = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserRole> userRoles = new ArrayList<>();
 
   public User(DataRegisterUser dataRegisterUser, Role role) {
@@ -60,7 +60,7 @@ public class User implements UserDetails {
     phoneNumber = dataRegisterUser.phoneNumber();
     dateOfBirth = dataRegisterUser.dateOfBirth();
     addAddress(new Address(dataRegisterUser.address()));
-    addRole(this, role);
+    addRole(role);
   }
 
   public void updateUser(DataUpdateUser dataUpdateUser) {
@@ -80,8 +80,8 @@ public class User implements UserDetails {
     this.userAddresses.add(new UserAddress(this, address));
   }
 
-  public void addRole(User user, Role role) {
-    this.userRoles.add(new UserRole(user, role));
+  public void addRole(Role role) {
+    this.userRoles.add(new UserRole(this, role));
   }
 
   /* Overrides the getUsername method of the UserDetails class to use email for authentication */
