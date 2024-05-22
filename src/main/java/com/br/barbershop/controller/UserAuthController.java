@@ -20,7 +20,7 @@ import java.net.URI;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("auth/user")
+@RequestMapping("user")
 @Controller
 public class UserAuthController {
 
@@ -44,7 +44,6 @@ public class UserAuthController {
   @GetMapping
   public ResponseEntity<Page<DataUser>> getAllUser(@PageableDefault(size = 10, sort = {"document"}) Pageable pageable) {
     Page<DataUser> result = userAuthService.getAllUsers(pageable);
-    System.out.println(result);
     return ResponseEntity.ok().body(result);
   }
 

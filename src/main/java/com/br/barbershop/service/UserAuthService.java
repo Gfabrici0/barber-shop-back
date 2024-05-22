@@ -37,6 +37,11 @@ public class UserAuthService {
       .orElseThrow(() -> new UserNotFoundException("User not found"));
   }
 
+  public DataUser getUserByEmail(String email) {
+    return userAuthRepository.findByEmail(email).map(DataUser::new)
+      .orElseThrow(() -> new UserNotFoundException("User not found"));
+  }
+
   public void updateUser(UUID id, DataUpdateUser dataUpdateUser) {
     User user = userAuthRepository.findById(id)
         .orElseThrow(() -> new UserNotFoundException("User not found"));

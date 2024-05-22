@@ -22,12 +22,11 @@ public class Role {
   @UuidGenerator
   private UUID id;
 
-  @Enumerated(EnumType.STRING)
   @Column(name = "role", nullable = false)
-  private RoleEnum role;
+  private String role;
 
   public Role(RoleEnum role) {
-    this.role = role;
+    this.role = role.name();
   }
 
 }

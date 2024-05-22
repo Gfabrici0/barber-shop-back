@@ -10,6 +10,6 @@ public record DataRole(
   RoleEnum role
 ) {
   public DataRole(Role role) {
-    this(role.getId(), role.getRole());
+    this(role.getId(), RoleEnum.valueOf(role.getRole().toUpperCase()));
   }
 }

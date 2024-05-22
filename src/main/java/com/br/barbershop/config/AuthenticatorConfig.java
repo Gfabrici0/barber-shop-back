@@ -1,7 +1,9 @@
 package com.br.barbershop.config;
 
 import com.br.barbershop.model.DTO.token.TokenResponse;
+import com.br.barbershop.model.DTO.user.DataUser;
 import com.br.barbershop.model.DTO.user.UserCredentials;
+import com.br.barbershop.service.UserAuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,9 +23,12 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
 
   private final TokenManager tokenManager;
 
-  public AuthenticatorConfig(AuthenticationManager authenticationManager, TokenManager tokenManager) {
+  private final UserAuthService userAuthService;
+
+  public AuthenticatorConfig(AuthenticationManager authenticationManager, TokenManager tokenManager, UserAuthService userAuthService) {
     this.authenticationManager = authenticationManager;
     this.tokenManager = tokenManager;
+    this.userAuthService = userAuthService;
     super.setAuthenticationManager(authenticationManager);
   }
 
@@ -34,6 +39,7 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
       UserCredentials credentials = new ObjectMapper().readValue(request.getInputStream(), UserCredentials.class);
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
           credentials.email(), credentials.password());
+
       return authenticationManager.authenticate(authenticationToken);
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -48,7 +54,15 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
     UserDetails userDetails = (UserDetails) authResult.getPrincipal();
     String email = userDetails.getUsername();
 
-    String token = tokenManager.generateToken(email);
+    DataUser user = userAuthService.getUserByEmail(email);
+
+    String token = tokenManager.generateToken(
+      user.id(),
+      user.email(),
+      user.role().stream().map(
+        userRole -> userRole.role().getRole()
+      ).toList()
+    );
 
     response.addHeader("Authorization", "Bearer " + token);
     response.setContentType("application/json");

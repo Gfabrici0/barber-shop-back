@@ -23,17 +23,9 @@ CREATE TABLE IF NOT EXISTS public.user_address (
   FOREIGN KEY (address_id) REFERENCES public.address(id) ON DELETE CASCADE
 );
 
-DO $$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'role_type') THEN
-    CREATE TYPE public.role_type AS ENUM ('ADMIN', 'BARBERSHOP', 'BARBER', 'USER');
-  END IF;
-END
-$$;
-
 CREATE TABLE IF NOT EXISTS public.role (
   id UUID PRIMARY KEY,
-  role public.role_type NOT NULL
+  role VARCHAR(50) NOT NULL
 );
 
 INSERT INTO public.role (id, role) VALUES
