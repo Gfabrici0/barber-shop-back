@@ -14,10 +14,10 @@ public record DataUser(
     String email,
     String username,
     String document,
-    List<DataRole> role,
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth,
     String phoneNumber,
+    List<DataRole> role,
     List<DataAddress> address
 ) {
   public DataUser(User user) {
@@ -26,11 +26,11 @@ public record DataUser(
         user.getEmail(),
         user.getRealUsername(),
         user.getFormattedDocument(),
+        user.getDateOfBirth(),
+        user.getFormattedPhoneNumber(),
         user.getUserRoles().stream().map(
           userRole -> new DataRole(userRole.getRole())
         ).toList(),
-        user.getDateOfBirth(),
-        user.getFormattedPhoneNumber(),
         user.getUserAddresses().stream().map(
           userAddress -> new DataAddress(userAddress.getAddress())
         ).toList()

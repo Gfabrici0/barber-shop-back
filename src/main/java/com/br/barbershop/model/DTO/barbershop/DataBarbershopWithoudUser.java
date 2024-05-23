@@ -6,7 +6,7 @@ import com.br.barbershop.model.entity.Barbershop;
 import java.util.List;
 import java.util.UUID;
 
-public record ListBarbershop(
+public record DataBarbershopWithoudUser(
     UUID id,
     String ownerName,
     String corporateName,
@@ -15,7 +15,7 @@ public record ListBarbershop(
     String email,
     List<DataAddress> addresses
 ) {
-  public ListBarbershop(Barbershop barbershop) {
+  public DataBarbershopWithoudUser(Barbershop barbershop) {
     this(
         barbershop.getId(),
         barbershop.getOwnerName(),

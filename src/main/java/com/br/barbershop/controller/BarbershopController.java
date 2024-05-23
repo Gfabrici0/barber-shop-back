@@ -3,7 +3,7 @@ package com.br.barbershop.controller;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataRegisterBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataUpdateBarbershop;
-import com.br.barbershop.model.DTO.barbershop.ListBarbershop;
+import com.br.barbershop.model.DTO.barbershop.DataBarbershopWithoudUser;
 import com.br.barbershop.model.entity.Barbershop;
 import com.br.barbershop.service.BarbershopService;
 import jakarta.validation.Valid;
@@ -43,14 +43,14 @@ public class BarbershopController {
   }
 
   @GetMapping
-  public ResponseEntity<Page<ListBarbershop>> getAllBarbershop(@PageableDefault(size = 10, sort = {"document"}) Pageable pageable) {
-    Page<ListBarbershop> result = barbershopService.getAllBarbershops(pageable);
+  public ResponseEntity<Page<DataBarbershopWithoudUser>> getAllBarbershop(@PageableDefault(size = 10, sort = {"document"}) Pageable pageable) {
+    Page<DataBarbershopWithoudUser> result = barbershopService.getAllBarbershops(pageable);
     return ResponseEntity.ok().body(result);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<DataBarbershop> getBarbershopById(@PathVariable UUID id) {
-    DataBarbershop result = barbershopService.getBarbershopById(id);
+    DataBarbershop result = barbershopService.getDataBarbershopById(id);
     return ResponseEntity.ok().body(result);
   }
 

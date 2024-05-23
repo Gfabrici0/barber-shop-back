@@ -5,7 +5,7 @@ import com.br.barbershop.exception.BarbershopNotFoundException;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataRegisterBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataUpdateBarbershop;
-import com.br.barbershop.model.DTO.barbershop.ListBarbershop;
+import com.br.barbershop.model.DTO.barbershop.DataBarbershopWithoudUser;
 import com.br.barbershop.model.entity.Barbershop;
 import com.br.barbershop.model.entity.Role;
 import com.br.barbershop.repository.BarbershopRepository;
@@ -30,12 +30,17 @@ public class BarbershopService {
     return barbershopRepository.save(new Barbershop(dataRegisterBarbershop, role));
   }
 
-  public Page<ListBarbershop> getAllBarbershops(Pageable pageable) {
-    return barbershopRepository.findAll(pageable).map(ListBarbershop::new);
+  public Page<DataBarbershopWithoudUser> getAllBarbershops(Pageable pageable) {
+    return barbershopRepository.findAll(pageable).map(DataBarbershopWithoudUser::new);
   }
 
-  public DataBarbershop getBarbershopById(UUID id) {
+  public DataBarbershop getDataBarbershopById(UUID id) {
     return barbershopRepository.findById(id).map(DataBarbershop::new)
+        .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
+  }
+
+  public Barbershop getBarbershopById(UUID id) {
+    return barbershopRepository.findById(id)
         .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
   }
 
