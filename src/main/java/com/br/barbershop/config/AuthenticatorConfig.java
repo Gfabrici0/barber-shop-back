@@ -1,7 +1,9 @@
 package com.br.barbershop.config;
 
-import com.br.barbershop.model.DTO.TokenResponse;
-import com.br.barbershop.model.DTO.UserCredentials;
+import com.br.barbershop.model.DTO.token.TokenResponse;
+import com.br.barbershop.model.DTO.user.DataUser;
+import com.br.barbershop.model.DTO.user.UserCredentials;
+import com.br.barbershop.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,9 +23,12 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
 
   private final TokenManager tokenManager;
 
-  public AuthenticatorConfig(AuthenticationManager authenticationManager, TokenManager tokenManager) {
+  private final UserService userService;
+
+  public AuthenticatorConfig(AuthenticationManager authenticationManager, TokenManager tokenManager, UserService userService) {
     this.authenticationManager = authenticationManager;
     this.tokenManager = tokenManager;
+    this.userService = userService;
     super.setAuthenticationManager(authenticationManager);
   }
 
@@ -33,7 +38,8 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
     try {
       UserCredentials credentials = new ObjectMapper().readValue(request.getInputStream(), UserCredentials.class);
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-          credentials.username(), credentials.password());
+          credentials.email(), credentials.password());
+
       return authenticationManager.authenticate(authenticationToken);
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -46,9 +52,17 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
                                           FilterChain chain,
                                           Authentication authResult) throws IOException {
     UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-    String username = userDetails.getUsername();
+    String email = userDetails.getUsername();
 
-    String token = tokenManager.generateToken(username);
+    DataUser user = userService.getUserByEmail(email);
+
+    String token = tokenManager.generateToken(
+      user.id(),
+      user.email(),
+      user.role().stream().map(
+        userRole -> userRole.role().getRole()
+      ).toList()
+    );
 
     response.addHeader("Authorization", "Bearer " + token);
     response.setContentType("application/json");

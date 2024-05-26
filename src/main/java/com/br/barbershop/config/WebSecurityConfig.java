@@ -1,5 +1,6 @@
 package com.br.barbershop.config;
 
+import com.br.barbershop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,16 +28,21 @@ public class WebSecurityConfig {
   @Autowired
   private TokenManager tokenManager;
 
+  @Autowired
+  private UserService userService;
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
     httpSecurity
-        .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(authorize -> authorize
-         .requestMatchers(HttpMethod.POST, "/auth/client").permitAll()
-          .anyRequest().authenticated())
-        .addFilter(new AuthenticatorConfig(authenticationManager, tokenManager))
-        .addFilterBefore(new TokenValidationFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);
+      .sessionManagement(configure -> configure.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .csrf(AbstractHttpConfigurer::disable)
+      .authorizeHttpRequests(authorize -> authorize
+        .requestMatchers(HttpMethod.POST, "user").permitAll()
+        .requestMatchers(HttpMethod.POST, "barbershop").permitAll()
+        .anyRequest().authenticated()
+      )
+      .addFilter(new AuthenticatorConfig(authenticationManager, tokenManager, userService))
+      .addFilterBefore(new TokenValidationFilter(tokenManager, userService), UsernamePasswordAuthenticationFilter.class);
 
     return httpSecurity.build();
   }

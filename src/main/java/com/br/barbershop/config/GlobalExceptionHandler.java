@@ -1,7 +1,12 @@
 package com.br.barbershop.config;
 
+import com.br.barbershop.exception.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -20,35 +25,22 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException ex) {
-    List<DataErrorValidation> erros = ex.getFieldErrors().stream()
+    List<DataErrorValidation> errors = ex.getFieldErrors().stream()
         .map(DataErrorValidation::new)
         .toList();
-    return ResponseEntity.badRequest().body(erros);
+    return ResponseEntity.badRequest().body(errors);
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<Object> handleInternalServerError(Exception ex, WebRequest request) {
-
-    ApiError apiError = new ApiError(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        "An unexpected internal server error occurred",
-        ex.getMessage());
-
-    return ResponseEntity
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .body(apiError);
+  public ResponseEntity<Map<String, String>> handleInternalServerError(Exception ex, WebRequest request) {
+    Map<String, String> errorResponse = new HashMap<>();
+    errorResponse.put("error", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
   }
 
-  static class ApiError {
-    private HttpStatus status;
-    private String message;
-    private String debugMessage;
-
-    public ApiError(HttpStatus status, String message, String debugMessage) {
-      this.status = status;
-      this.message = message;
-      this.debugMessage = debugMessage;
-    }
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
   }
 
   private record DataErrorValidation(String campo, String mensagem) {

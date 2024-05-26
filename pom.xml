@@ -97,6 +97,10 @@
 			<artifactId>junit-platform-suite</artifactId>
 			<version>1.10.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
