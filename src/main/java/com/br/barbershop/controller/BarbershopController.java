@@ -1,5 +1,6 @@
 package com.br.barbershop.controller;
 
+import com.br.barbershop.model.DTO.barber.BarbershopWithBarbers;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataRegisterBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataUpdateBarbershop;
@@ -52,6 +53,12 @@ public class BarbershopController {
   public ResponseEntity<DataBarbershop> getBarbershopById(@PathVariable UUID id) {
     DataBarbershop result = barbershopService.getDataBarbershopById(id);
     return ResponseEntity.ok().body(result);
+  }
+
+  @GetMapping("barbers/{id}")
+  public ResponseEntity<BarbershopWithBarbers> getBarbersFromBarbershop(@PathVariable UUID id) {
+    BarbershopWithBarbers barbers = barbershopService.getBarbersFromBarbershop(id);
+    return ResponseEntity.ok().body(barbers);
   }
 
   @Transactional

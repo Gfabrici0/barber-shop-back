@@ -22,18 +22,18 @@ public record DataUser(
 ) {
   public DataUser(User user) {
     this(
-        user.getId(),
-        user.getEmail(),
-        user.getRealUsername(),
-        user.getFormattedDocument(),
-        user.getDateOfBirth(),
-        user.getFormattedPhoneNumber(),
-        user.getUserRoles().stream().map(
-          userRole -> new DataRole(userRole.getRole())
-        ).toList(),
-        user.getUserAddresses().stream().map(
-          userAddress -> new DataAddress(userAddress.getAddress())
-        ).toList()
+      user.getId(),
+      user.getEmail(),
+      user.getRealUsername(),
+      user.getDocument(),
+      user.getDateOfBirth(),
+      user.getPhoneNumber(),
+      user.getUserRoles().stream().map(
+        userRole -> new DataRole(userRole.getRole())
+      ).toList(),
+      user.getUserAddresses().stream().map(
+        userAddress -> new DataAddress(userAddress.getAddress())
+      ).toList()
     );
   }
 }

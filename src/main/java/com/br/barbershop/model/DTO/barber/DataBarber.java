@@ -20,7 +20,7 @@ public record DataBarber(
     this(
       barber.getId(),
       barber.getUser().getEmail(),
-      barber.getUser().getUsername(),
+      barber.getUser().getRealUsername(),
       barber.getUser().getDocument(),
       barber.getUser().getDateOfBirth(),
       new DataUser(barber.getUser()),

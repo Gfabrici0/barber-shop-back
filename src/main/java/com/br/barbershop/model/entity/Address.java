@@ -49,8 +49,4 @@ public class Address {
       this.setAddressCity(dataUpdateAddress.addressCity());
     }
   }
-
-  public String getFormattedAddressNumber() {
-    return StringUtil.formatZipCode(addressNumber);
-  }
 }

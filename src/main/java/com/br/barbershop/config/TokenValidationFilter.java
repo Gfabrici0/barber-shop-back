@@ -3,7 +3,7 @@ package com.br.barbershop.config;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.br.barbershop.model.DTO.user.DataUser;
-import com.br.barbershop.service.UserAuthService;
+import com.br.barbershop.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,11 +25,11 @@ public class TokenValidationFilter extends OncePerRequestFilter {
 
   private final TokenManager tokenManager;
 
-  private final UserAuthService userAuthService;
+  private final UserService userService;
 
-  public TokenValidationFilter(TokenManager tokenManager, UserAuthService userAuthService) {
+  public TokenValidationFilter(TokenManager tokenManager, UserService userService) {
     this.tokenManager = tokenManager;
-    this.userAuthService = userAuthService;
+    this.userService = userService;
   }
 
   @Override
@@ -44,7 +44,7 @@ public class TokenValidationFilter extends OncePerRequestFilter {
         UUID id = tokenManager.getIdFromToken(token);
         List<String> roles = tokenManager.getRolesFromToken(token);
 
-        DataUser dataUser = userAuthService.getUserByEmail(email);
+        DataUser dataUser = userService.getUserByEmail(email);
 
         if (validateToken(email, id, roles, dataUser)) {
           if (SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -22,11 +22,11 @@ public class Barber {
   @UuidGenerator
   private UUID id;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id", nullable = false)
   public User user;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "barbershop_id", nullable = false)
   public Barbershop barbershop;
 

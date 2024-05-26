@@ -1,6 +1,5 @@
 package com.br.barbershop.model.entity;
 
-import com.br.barbershop.help.StringUtil;
 import com.br.barbershop.model.DTO.user.DataRegisterUser;
 import com.br.barbershop.model.DTO.address.DataUpdateAddress;
 import com.br.barbershop.model.DTO.user.DataUpdateUser;
@@ -92,14 +91,6 @@ public class User implements UserDetails {
 
   public String getRealUsername(){
     return this.username;
-  }
-
-  public String getFormattedDocument() {
-    return StringUtil.FormatCPF(this.document);
-  }
-
-  public String getFormattedPhoneNumber() {
-    return StringUtil.FormatPhoneNumber(this.phoneNumber);
   }
 
   @Override

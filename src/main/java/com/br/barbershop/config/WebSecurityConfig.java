@@ -1,6 +1,6 @@
 package com.br.barbershop.config;
 
-import com.br.barbershop.service.UserAuthService;
+import com.br.barbershop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ public class WebSecurityConfig {
   private TokenManager tokenManager;
 
   @Autowired
-  private UserAuthService userAuthService;
+  private UserService userService;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
@@ -41,8 +41,8 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, "barbershop").permitAll()
         .anyRequest().authenticated()
       )
-      .addFilter(new AuthenticatorConfig(authenticationManager, tokenManager, userAuthService))
-      .addFilterBefore(new TokenValidationFilter(tokenManager, userAuthService), UsernamePasswordAuthenticationFilter.class);
+      .addFilter(new AuthenticatorConfig(authenticationManager, tokenManager, userService))
+      .addFilterBefore(new TokenValidationFilter(tokenManager, userService), UsernamePasswordAuthenticationFilter.class);
 
     return httpSecurity.build();
   }

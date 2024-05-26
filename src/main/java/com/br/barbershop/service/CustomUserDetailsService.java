@@ -1,7 +1,7 @@
 package com.br.barbershop.service;
 
 import com.br.barbershop.model.entity.User;
-import com.br.barbershop.repository.UserAuthRepository;
+import com.br.barbershop.repository.UserRepository;
 import java.util.Collection;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
   @Autowired
-  private UserAuthRepository userRepository;
+  private UserRepository userRepository;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

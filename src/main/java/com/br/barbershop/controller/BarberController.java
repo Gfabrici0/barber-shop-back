@@ -2,7 +2,6 @@ package com.br.barbershop.controller;
 
 import com.br.barbershop.model.DTO.barber.DataBarber;
 import com.br.barbershop.model.DTO.barber.DataRegisterBarber;
-import com.br.barbershop.model.DTO.barber.DataUpdateBarber;
 import com.br.barbershop.model.entity.Barber;
 import com.br.barbershop.service.BarberService;
 import jakarta.validation.Valid;
@@ -51,13 +50,6 @@ public class BarberController {
   public ResponseEntity<DataBarber> getBarberById(@PathVariable UUID id) {
     DataBarber result = barberService.getBarberById(id);
     return ResponseEntity.ok().body(result);
-  }
-
-  @Transactional
-  @PutMapping("/{id}")
-  public ResponseEntity<String> updateBarber(@PathVariable UUID id, @RequestBody @Valid DataUpdateBarber dataUpdateBarber) {
-    barberService.updateBarber(id, dataUpdateBarber);
-    return ResponseEntity.noContent().build();
   }
 
   @Transactional

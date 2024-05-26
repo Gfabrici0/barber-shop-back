@@ -3,7 +3,7 @@ package com.br.barbershop.config;
 import com.br.barbershop.model.DTO.token.TokenResponse;
 import com.br.barbershop.model.DTO.user.DataUser;
 import com.br.barbershop.model.DTO.user.UserCredentials;
-import com.br.barbershop.service.UserAuthService;
+import com.br.barbershop.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,12 +23,12 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
 
   private final TokenManager tokenManager;
 
-  private final UserAuthService userAuthService;
+  private final UserService userService;
 
-  public AuthenticatorConfig(AuthenticationManager authenticationManager, TokenManager tokenManager, UserAuthService userAuthService) {
+  public AuthenticatorConfig(AuthenticationManager authenticationManager, TokenManager tokenManager, UserService userService) {
     this.authenticationManager = authenticationManager;
     this.tokenManager = tokenManager;
-    this.userAuthService = userAuthService;
+    this.userService = userService;
     super.setAuthenticationManager(authenticationManager);
   }
 
@@ -54,7 +54,7 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
     UserDetails userDetails = (UserDetails) authResult.getPrincipal();
     String email = userDetails.getUsername();
 
-    DataUser user = userAuthService.getUserByEmail(email);
+    DataUser user = userService.getUserByEmail(email);
 
     String token = tokenManager.generateToken(
       user.id(),

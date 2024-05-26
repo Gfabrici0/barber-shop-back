@@ -13,6 +13,6 @@ public record DataAddress(
     String addressCity
 ) {
   public DataAddress(Address address){
-    this(address.getId(), address.getFormattedAddressNumber(), address.getAddressStreet(), address.getAddressCity());
+    this(address.getId(), address.getAddressNumber(), address.getAddressStreet(), address.getAddressCity());
   }
 }

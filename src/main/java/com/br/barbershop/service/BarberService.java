@@ -4,7 +4,6 @@ import com.br.barbershop.enumeration.RoleEnum;
 import com.br.barbershop.exception.BarberNotFoundException;
 import com.br.barbershop.model.DTO.barber.DataBarber;
 import com.br.barbershop.model.DTO.barber.DataRegisterBarber;
-import com.br.barbershop.model.DTO.barber.DataUpdateBarber;
 import com.br.barbershop.model.entity.Barber;
 import com.br.barbershop.model.entity.Barbershop;
 import com.br.barbershop.model.entity.Role;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
@@ -43,9 +41,6 @@ public class BarberService {
   public DataBarber getBarberById(UUID id) {
     return barberRepository.findById(id).map(DataBarber::new)
       .orElseThrow(() -> new BarberNotFoundException("Barber not found"));
-  }
-
-  public void updateBarber(UUID id, DataUpdateBarber dataUpdateBarber) {
   }
 
   public void deleteBarber(UUID id) {
