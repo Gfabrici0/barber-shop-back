@@ -49,4 +49,9 @@ public class BarberService {
 
     barberRepository.deleteById(barber.getId());
   }
+
+  public Barber getBarberEntityById(UUID id) {
+    return barberRepository.findById(id)
+      .orElseThrow(() -> new BarberNotFoundException("Barber not found"));
+  }
 }

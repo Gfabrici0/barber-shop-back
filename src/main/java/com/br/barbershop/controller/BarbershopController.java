@@ -5,6 +5,10 @@ import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataRegisterBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataUpdateBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershopWithoudUser;
+import com.br.barbershop.model.DTO.service.DataBarbershopService;
+import com.br.barbershop.model.DTO.service.DataRegisterBarbershopService;
+import com.br.barbershop.model.DTO.service.DataUpdateBarbershopService;
+import com.br.barbershop.model.DTO.service.ListBarbershopService;
 import com.br.barbershop.model.entity.Barbershop;
 import com.br.barbershop.service.BarbershopService;
 import jakarta.validation.Valid;
@@ -35,12 +39,37 @@ public class BarbershopController {
     Barbershop createdBarbershop = barbershopService.registerBarbershop(dataRegisterBarbershop);
 
     URI location = ServletUriComponentsBuilder
-        .fromCurrentRequest()
-        .path("/{id}")
-        .buildAndExpand(createdBarbershop.getId())
-        .toUri();
+      .fromCurrentRequest()
+      .path("/{id}")
+      .buildAndExpand(createdBarbershop.getId())
+      .toUri();
 
     return ResponseEntity.created(location).body(new DataBarbershop(createdBarbershop));
+  }
+
+  @Transactional
+  @PostMapping("service")
+  public ResponseEntity<DataBarbershopService> registerService(@RequestBody @Valid DataRegisterBarbershopService dataRegisterBarbershopService) {
+    DataBarbershopService service = barbershopService.registerService(dataRegisterBarbershopService);
+    return ResponseEntity.ok().body(service);
+  }
+
+  @GetMapping("service/{id}")
+  public ResponseEntity<ListBarbershopService> getAllBarbershopServices(@PathVariable UUID id) {
+    ListBarbershopService services = barbershopService.getAllBarbershopServices(id);
+    return ResponseEntity.ok().body(services);
+  }
+
+  @PutMapping("service/{id}")
+  public ResponseEntity<?> updateBarbershopService(@PathVariable UUID id, @RequestBody DataUpdateBarbershopService dataUpdateBarbershopService) {
+    barbershopService.updateBarbershopService(id, dataUpdateBarbershopService);
+    return ResponseEntity.noContent().build();
+  }
+
+  @DeleteMapping("service/{id}")
+  public ResponseEntity<?> deleteBarbershopServiceById(@PathVariable UUID id) {
+    barbershopService.deleteBarbershopServiceById(id);
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping

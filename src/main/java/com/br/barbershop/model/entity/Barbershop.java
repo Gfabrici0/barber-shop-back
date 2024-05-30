@@ -59,6 +59,9 @@ public class Barbershop {
   @OneToMany(mappedBy = "barbershop", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<BarbershopUser> barbershopUsers = new ArrayList<>();
 
+  @OneToMany(mappedBy = "barbershop", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Barber> barbers;
+
   public Barbershop(DataRegisterBarbershop dataRegisterBarbershop, Role role) {
     LocalDateTime localDateTime = LocalDateTime.now();
 
