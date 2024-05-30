@@ -2,16 +2,22 @@ package com.br.barbershop.service;
 
 import com.br.barbershop.enumeration.RoleEnum;
 import com.br.barbershop.exception.BarbershopNotFoundException;
+import com.br.barbershop.exception.ServiceNotFoundException;
 import com.br.barbershop.model.DTO.barber.BarberWithoutUser;
 import com.br.barbershop.model.DTO.barber.BarbershopWithBarbers;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataRegisterBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataUpdateBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershopWithoudUser;
+import com.br.barbershop.model.DTO.service.DataBarbershopService;
+import com.br.barbershop.model.DTO.service.DataRegisterBarbershopService;
+import com.br.barbershop.model.DTO.service.DataUpdateBarbershopService;
+import com.br.barbershop.model.DTO.service.ListBarbershopService;
+import com.br.barbershop.model.entity.Barber;
 import com.br.barbershop.model.entity.Barbershop;
 import com.br.barbershop.model.entity.Role;
 import com.br.barbershop.repository.BarbershopRepository;
-import com.br.barbershop.repository.CustomBarbershopRepository;
+import com.br.barbershop.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +33,13 @@ public class BarbershopService {
   private RoleService roleService;
 
   @Autowired
-  private BarbershopRepository barbershopRepository;
+  private BarberService barberService;
 
   @Autowired
-  private CustomBarbershopRepository customBarbershopRepository;
+  private ServiceRepository serviceRepository;
+
+  @Autowired
+  private BarbershopRepository barbershopRepository;
 
   public Barbershop registerBarbershop(DataRegisterBarbershop dataRegisterBarbershop) {
     Role role = roleService.findByRole(RoleEnum.BARBERSHOP);
@@ -55,7 +64,9 @@ public class BarbershopService {
     Barbershop barbershop = barbershopRepository.findById(id)
       .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
 
-    List<BarberWithoutUser> barbers = customBarbershopRepository.findBarbersFromBarbershopById(id);
+    List<BarberWithoutUser> barbers = barbershop.getBarbers().stream()
+      .map(BarberWithoutUser::new)
+      .toList();
 
     return new BarbershopWithBarbers(barbershop, barbers);
   }
@@ -76,4 +87,37 @@ public class BarbershopService {
     barbershopRepository.deleteById(barbershop.getId());
   }
 
+  public DataBarbershopService registerService(DataRegisterBarbershopService dataRegisterBarbershopService) {
+    Barbershop barbershop = barbershopRepository.findById(dataRegisterBarbershopService.barbershopId())
+      .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
+
+    Barber barber = barberService.getBarberEntityById(dataRegisterBarbershopService.barberId());
+
+    com.br.barbershop.model.entity.Service service = serviceRepository.save(new com.br.barbershop.model.entity.Service(dataRegisterBarbershopService, barbershop, barber));
+    return new DataBarbershopService(barbershop, service);
+  }
+
+  public ListBarbershopService getAllBarbershopServices(UUID id) {
+    Barbershop barbershop = barbershopRepository.findById(id)
+      .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
+
+    List<com.br.barbershop.model.entity.Service> service = serviceRepository.findByBarbershopId(barbershop.getId());
+    return new ListBarbershopService(barbershop, service);
+  }
+
+  public void updateBarbershopService(UUID id, DataUpdateBarbershopService dataUpdateBarbershopService) {
+    com.br.barbershop.model.entity.Service service = serviceRepository.findById(id)
+      .orElseThrow(() -> new ServiceNotFoundException("Service not found"));
+
+    service.updateService(dataUpdateBarbershopService);
+
+    serviceRepository.save(service);
+  }
+
+  public void deleteBarbershopServiceById(UUID id) {
+    com.br.barbershop.model.entity.Service service = serviceRepository.findById(id)
+      .orElseThrow(() -> new ServiceNotFoundException("Service not found"));
+
+    serviceRepository.deleteById(service.getId());
+  }
 }
