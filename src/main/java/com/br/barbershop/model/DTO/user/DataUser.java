@@ -17,6 +17,7 @@ public record DataUser(
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth,
     String phoneNumber,
+    String status,
     List<DataRole> role,
     List<DataAddress> address
 ) {
@@ -28,6 +29,7 @@ public record DataUser(
       user.getDocument(),
       user.getDateOfBirth(),
       user.getPhoneNumber(),
+      user.getStatusId().getStatus(),
       user.getUserRoles().stream().map(
         userRole -> new DataRole(userRole.getRole())
       ).toList(),

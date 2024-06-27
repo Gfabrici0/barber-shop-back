@@ -68,7 +68,7 @@ public class AuthenticatorConfig extends UsernamePasswordAuthenticationFilter {
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
 
-    TokenResponse tokenResponse = new TokenResponse(token);
+    TokenResponse tokenResponse = new TokenResponse(token, user.email(), user.id(), user.username(), user.document(), user.role().get(0).role().getRole());
 
     response.getWriter().write(new ObjectMapper().writeValueAsString(tokenResponse));
     response.getWriter().flush();

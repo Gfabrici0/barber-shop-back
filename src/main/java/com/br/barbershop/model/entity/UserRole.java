@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "user_role")
 @EqualsAndHashCode(of = "id")
-public class UserRole {
+public class UserRole implements GrantedAuthority {
 
   @Id
   @UuidGenerator
@@ -32,6 +33,11 @@ public class UserRole {
   UserRole(User user, Role role) {
     this.user = user;
     this.role = role;
+  }
+
+  @Override
+  public String getAuthority() {
+    return role.getRole();
   }
 
 }

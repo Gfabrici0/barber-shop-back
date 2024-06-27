@@ -1,5 +1,6 @@
 package com.br.barbershop.service;
 
+import com.br.barbershop.enumeration.StatusEnum;
 import com.br.barbershop.enumeration.RoleEnum;
 import com.br.barbershop.exception.BarbershopNotFoundException;
 import com.br.barbershop.exception.ServiceNotFoundException;
@@ -15,6 +16,7 @@ import com.br.barbershop.model.DTO.service.DataUpdateBarbershopService;
 import com.br.barbershop.model.DTO.service.ListBarbershopService;
 import com.br.barbershop.model.entity.Barber;
 import com.br.barbershop.model.entity.Barbershop;
+import com.br.barbershop.model.entity.Status;
 import com.br.barbershop.model.entity.Role;
 import com.br.barbershop.repository.BarbershopRepository;
 import com.br.barbershop.repository.ServiceRepository;
@@ -36,27 +38,33 @@ public class BarbershopService {
   private BarberService barberService;
 
   @Autowired
+  private StatusService statusService;
+
+  @Autowired
   private ServiceRepository serviceRepository;
 
   @Autowired
   private BarbershopRepository barbershopRepository;
 
   public Barbershop registerBarbershop(DataRegisterBarbershop dataRegisterBarbershop) {
-    Role role = roleService.findByRole(RoleEnum.BARBERSHOP);
-    return barbershopRepository.save(new Barbershop(dataRegisterBarbershop, role));
+    Role role = roleService.findByRole(RoleEnum.ROLE_BARBERSHOP);
+    Status status = statusService.findByStatus(StatusEnum.PENDING_APPROVAL);
+    return barbershopRepository.save(new Barbershop(dataRegisterBarbershop, role, status));
   }
 
   public Page<DataBarbershopWithoudUser> getAllBarbershops(Pageable pageable) {
-    return barbershopRepository.findAll(pageable).map(DataBarbershopWithoudUser::new);
+    return barbershopRepository.findAllByStatusId(StatusEnum.ACTIVE.getStatus(), pageable)
+      .map(DataBarbershopWithoudUser::new);
   }
 
   public DataBarbershop getDataBarbershopById(UUID id) {
-    return barbershopRepository.findById(id).map(DataBarbershop::new)
+    return barbershopRepository.findByIdAndStatusId(id, StatusEnum.ACTIVE.getStatus())
+      .map(DataBarbershop::new)
       .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
   }
 
   public Barbershop getBarbershopById(UUID id) {
-    return barbershopRepository.findById(id)
+    return barbershopRepository.findByIdAndStatusId(id, StatusEnum.ACTIVE.getStatus())
       .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
   }
 
@@ -120,4 +128,10 @@ public class BarbershopService {
 
     serviceRepository.deleteById(service.getId());
   }
+
+  public Page<DataBarbershop> getAllBarbershopsWithPendingStatusById(Pageable pageable) {
+    return barbershopRepository.findAllByStatusId(StatusEnum.PENDING_APPROVAL.getStatus(), pageable)
+      .map(DataBarbershop::new);
+  }
+
 }

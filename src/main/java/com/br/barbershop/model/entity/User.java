@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -51,13 +52,18 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserRole> userRoles = new ArrayList<>();
 
-  public User(DataRegisterUser dataRegisterUser, Role role) {
+  @ManyToOne
+  @JoinColumn(name = "status_id", nullable = false)
+  private Status statusId;
+
+  public User(DataRegisterUser dataRegisterUser, Role role, Status status) {
     email = dataRegisterUser.email();
     username = dataRegisterUser.username();
     password = new BCryptPasswordEncoder().encode(dataRegisterUser.password());
     document = dataRegisterUser.document();
     phoneNumber = dataRegisterUser.phoneNumber();
     dateOfBirth = dataRegisterUser.dateOfBirth();
+    statusId = status;
     addAddress(new Address(dataRegisterUser.address()));
     addRole(role);
   }
@@ -95,7 +101,9 @@ public class User implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return null;
+    return userRoles.stream()
+      .map(role -> (GrantedAuthority) role)
+      .collect(Collectors.toList());
   }
 
   @Override

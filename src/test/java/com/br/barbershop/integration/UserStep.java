@@ -2,7 +2,6 @@ package com.br.barbershop.integration;
 
 import com.br.barbershop.controller.UserController;
 import com.br.barbershop.enumeration.RoleEnum;
-import com.br.barbershop.help.StringUtil;
 import com.br.barbershop.helpers.TestContext;
 import com.br.barbershop.model.DTO.address.DataRegisterAddress;
 import com.br.barbershop.model.DTO.user.DataRegisterUser;
@@ -63,7 +62,7 @@ public class UserStep {
       "Tawdrysson Vowoy Satuon",
       "zEu*ja*WA6",
       "07471013028",
-      RoleEnum.USER,
+      RoleEnum.ROLE_USER,
       "21998443394",
       LocalDate.of(2004, 9, 13),
       validAddress

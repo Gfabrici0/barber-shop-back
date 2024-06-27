@@ -1,21 +1,31 @@
 package com.br.barbershop.service;
 
+import com.br.barbershop.enumeration.RoleEnum;
+import com.br.barbershop.enumeration.StatusEnum;
 import com.br.barbershop.exception.UserNotFoundException;
 import com.br.barbershop.model.DTO.user.DataUser;
 import com.br.barbershop.model.DTO.user.DataRegisterUser;
 import com.br.barbershop.model.DTO.user.DataUpdateUser;
 import com.br.barbershop.model.entity.Role;
+import com.br.barbershop.model.entity.Status;
 import com.br.barbershop.model.entity.User;
 import com.br.barbershop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
   @Autowired
   private UserRepository userRepository;
@@ -23,17 +33,27 @@ public class UserService {
   @Autowired
   private RoleService roleService;
 
+  @Autowired
+  private StatusService statusService;
+
   public User registerUser(DataRegisterUser dataRegisterUser) {
-    Role role = roleService.findByRole(dataRegisterUser.role());
-    return userRepository.save(new User(dataRegisterUser, role));
+    Role role = roleService.findByRole(dataRegisterUser.role() != null ? dataRegisterUser.role() : RoleEnum.ROLE_USER);
+    Status status = statusService.findByStatus(StatusEnum.ACTIVE);
+    return userRepository.save(new User(dataRegisterUser, role, status));
   }
 
-  public Page<DataUser> getAllUsers(Pageable pageable) {
-    return userRepository.findAll(pageable).map(DataUser::new);
+  public Page<DataUser> getAllActiveUsers(Pageable pageable) {
+    return userRepository.findAllActiveUsers(StatusEnum.ACTIVE.getStatus(), pageable)
+      .map(DataUser::new);
   }
 
-  public DataUser getUserById(UUID id) {
-    return userRepository.findById(id).map(DataUser::new)
+  public DataUser getActiveUserById(UUID id) {
+    return userRepository.findActiveUserById(id).map(DataUser::new)
+      .orElseThrow(() -> new UserNotFoundException("User not found"));
+  }
+
+  public User getActiveUserEntityById(UUID uuid) {
+    return userRepository.findActiveUserById(uuid)
       .orElseThrow(() -> new UserNotFoundException("User not found"));
   }
 
@@ -57,4 +77,21 @@ public class UserService {
 
     userRepository.deleteById(user.getId());
   }
+
+  @Override
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = userRepository.findByEmail(email)
+      .orElseThrow(() -> new UsernameNotFoundException("User not found with e-mail: " + email));
+
+    return new org.springframework.security.core.userdetails.User(
+      user.getEmail(),
+      user.getPassword(),
+      getAuthorities(user)
+    );
+  }
+
+  private Collection<? extends GrantedAuthority> getAuthorities(User user) {
+    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+  }
+
 }

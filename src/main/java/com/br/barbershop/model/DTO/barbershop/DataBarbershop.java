@@ -14,6 +14,7 @@ public record DataBarbershop(
   String tradeName,
   String document,
   String email,
+  String status,
   List<DataAddress> addresses,
   List<DataUser> users
 ) {
@@ -25,6 +26,7 @@ public record DataBarbershop(
       barbershop.getTradeName(),
       barbershop.getDocument(),
       barbershop.getEmail(),
+      barbershop.getStatusId().getStatus(),
       barbershop.getBarbershopAddresses().stream()
         .map(barbershopAddress -> new DataAddress(barbershopAddress.getAddress()))
         .toList(),

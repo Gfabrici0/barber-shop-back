@@ -1,4 +1,4 @@
-CREATE TABLE service (
+CREATE TABLE IF NOT EXISTS service (
     id UUID PRIMARY KEY,
     service_name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,

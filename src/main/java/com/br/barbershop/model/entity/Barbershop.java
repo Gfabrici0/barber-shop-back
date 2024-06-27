@@ -62,9 +62,14 @@ public class Barbershop {
   @OneToMany(mappedBy = "barbershop", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Barber> barbers;
 
-  public Barbershop(DataRegisterBarbershop dataRegisterBarbershop, Role role) {
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "status_id", nullable = false)
+  private Status statusId;
+
+  public Barbershop(DataRegisterBarbershop dataRegisterBarbershop, Role role, Status status) {
     LocalDateTime localDateTime = LocalDateTime.now();
 
+    this.statusId = status;
     this.ownerName = dataRegisterBarbershop.ownerName();
     this.tradeName = dataRegisterBarbershop.tradeName();
     this.corporateName = dataRegisterBarbershop.corporateName();
@@ -75,7 +80,7 @@ public class Barbershop {
     this.updated_at = localDateTime;
 
     addAddress(dataRegisterBarbershop.barbershopAddress());
-    addUser(dataRegisterBarbershop, role);
+    addUser(dataRegisterBarbershop, role, status);
   }
 
   public void updateBarberShop(DataUpdateBarbershop dataUpdateBarbershop) {
@@ -86,19 +91,19 @@ public class Barbershop {
     this.barbershopAddresses.add(new BarbershopAddress(this, new Address(dataRegisterAddress)));
   }
 
-  private void addUser(DataRegisterBarbershop dataRegisterBarbershop, Role role) {
+  private void addUser(DataRegisterBarbershop dataRegisterBarbershop, Role role, Status status) {
     DataRegisterUser dataRegisterUser = new DataRegisterUser(
       dataRegisterBarbershop.email(),
       dataRegisterBarbershop.ownerName(),
       dataRegisterBarbershop.password(),
       dataRegisterBarbershop.document(),
-      RoleEnum.BARBERSHOP,
+      RoleEnum.ROLE_BARBERSHOP,
       dataRegisterBarbershop.phoneNumber(),
       dataRegisterBarbershop.dateOfBirth(),
       dataRegisterBarbershop.personalAddress()
     );
 
-    this.barbershopUsers.add(new BarbershopUser(this, new User(dataRegisterUser, role)));
+    this.barbershopUsers.add(new BarbershopUser(this, new User(dataRegisterUser, role, status)));
   }
 
 }

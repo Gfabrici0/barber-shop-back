@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public enum RoleEnum {
-  ROLE_ADMIN("ROLE_ADMIN"),
-  ROLE_BARBERSHOP("ROLE_BARBERSHOP"),
-  ROLE_BARBER("ROLE_BARBER"),
-  ROLE_USER("ROLE_USER");
+public enum StatusEnum {
+  ACTIVE("ACTIVE"),
+  INACTIVE("INACTIVE"),
+  PENDING_APPROVAL("PENDING_APPROVAL"),
+  REJECTED("REJECTED");
 
-  private String role;
+  private String status;
 }

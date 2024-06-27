@@ -30,24 +30,24 @@ public class Barber {
   @JoinColumn(name = "barbershop_id", nullable = false)
   public Barbershop barbershop;
 
-  public Barber(DataRegisterBarber dataRegisterBarber, Role role, Barbershop barbershop) {
-    this.user = addUser(dataRegisterBarber, role);
+  public Barber(DataRegisterBarber dataRegisterBarber, Role role, Barbershop barbershop, Status status) {
+    this.user = addUser(dataRegisterBarber, role, status);
     this.barbershop = barbershop;
   }
 
-  public User addUser(DataRegisterBarber dataRegisterBarber, Role role) {
+  public User addUser(DataRegisterBarber dataRegisterBarber, Role role, Status status) {
     DataRegisterUser dataRegisterUser = new DataRegisterUser(
       dataRegisterBarber.email(),
       dataRegisterBarber.username(),
       dataRegisterBarber.password(),
       dataRegisterBarber.document(),
-      RoleEnum.BARBER,
+      RoleEnum.ROLE_BARBER,
       dataRegisterBarber.phoneNumber(),
       dataRegisterBarber.dateOfBirth(),
       dataRegisterBarber.address()
     );
 
-    return new User(dataRegisterUser, role);
+    return new User(dataRegisterUser, role, status);
   }
 
 }

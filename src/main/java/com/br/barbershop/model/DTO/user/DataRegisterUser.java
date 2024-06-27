@@ -21,7 +21,6 @@ public record DataRegisterUser(
   @CPF
   @NotBlank
   String document,
-  @NotNull
   RoleEnum role,
   @NotBlank
   @Pattern(regexp = "^\\d{2}\\d{8,9}$", message = "Número de telefone celular inválido.")

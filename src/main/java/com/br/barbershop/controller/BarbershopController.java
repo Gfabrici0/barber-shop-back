@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -49,49 +50,64 @@ public class BarbershopController {
 
   @Transactional
   @PostMapping("service")
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP')")
   public ResponseEntity<DataBarbershopService> registerService(@RequestBody @Valid DataRegisterBarbershopService dataRegisterBarbershopService) {
     DataBarbershopService service = barbershopService.registerService(dataRegisterBarbershopService);
     return ResponseEntity.ok().body(service);
   }
 
   @GetMapping("service/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP')")
   public ResponseEntity<ListBarbershopService> getAllBarbershopServices(@PathVariable UUID id) {
     ListBarbershopService services = barbershopService.getAllBarbershopServices(id);
     return ResponseEntity.ok().body(services);
   }
 
   @PutMapping("service/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP')")
   public ResponseEntity<?> updateBarbershopService(@PathVariable UUID id, @RequestBody DataUpdateBarbershopService dataUpdateBarbershopService) {
     barbershopService.updateBarbershopService(id, dataUpdateBarbershopService);
     return ResponseEntity.noContent().build();
   }
 
   @DeleteMapping("service/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP')")
   public ResponseEntity<?> deleteBarbershopServiceById(@PathVariable UUID id) {
     barbershopService.deleteBarbershopServiceById(id);
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP', 'USER')")
   public ResponseEntity<Page<DataBarbershopWithoudUser>> getAllBarbershop(@PageableDefault(size = 10, sort = {"document"}) Pageable pageable) {
     Page<DataBarbershopWithoudUser> result = barbershopService.getAllBarbershops(pageable);
     return ResponseEntity.ok().body(result);
   }
 
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP', 'USER')")
   public ResponseEntity<DataBarbershop> getBarbershopById(@PathVariable UUID id) {
     DataBarbershop result = barbershopService.getDataBarbershopById(id);
     return ResponseEntity.ok().body(result);
   }
 
   @GetMapping("barbers/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP', 'USER')")
   public ResponseEntity<BarbershopWithBarbers> getBarbersFromBarbershop(@PathVariable UUID id) {
     BarbershopWithBarbers barbers = barbershopService.getBarbersFromBarbershop(id);
     return ResponseEntity.ok().body(barbers);
   }
 
+  @GetMapping("pending")
+  @PreAuthorize("hasAnyRole('ADMIN')")
+  public ResponseEntity<Page<DataBarbershop>> getAllBarbershopsWithPendingStatusById(@PageableDefault(size = 10, sort = {"document"}) Pageable pageable) {
+    Page<DataBarbershop> barbershop = barbershopService.getAllBarbershopsWithPendingStatusById(pageable);
+    return ResponseEntity.ok().body(barbershop);
+  }
+
   @Transactional
   @PutMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP')")
   public ResponseEntity<String> updateBarbershop(@PathVariable UUID id,@RequestBody @Valid DataUpdateBarbershop dataUpdateBarbershop) {
     barbershopService.updateBarbershop(id, dataUpdateBarbershop);
     return ResponseEntity.noContent().build();
@@ -99,6 +115,7 @@ public class BarbershopController {
 
   @Transactional
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN')")
   public ResponseEntity<?> deleteBarbershopById(@PathVariable UUID id) {
     barbershopService.deleteBarbershop(id);
     return ResponseEntity.noContent().build();
