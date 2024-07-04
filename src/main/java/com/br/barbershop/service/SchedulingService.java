@@ -42,6 +42,7 @@ public class SchedulingService {
     return new DataScheduling(scheduling);
   }
 
+
   public Page<AllDataScheduling> getAllScheduling(Pageable pageable) {
     return schedulingRepository.findAll(pageable).map(AllDataScheduling::new);
   }
@@ -55,7 +56,9 @@ public class SchedulingService {
   }
 
   public Page<DataScheduling> getSchedulingByUser(UUID userId, Pageable pageable) {
-    return schedulingRepository.findByUserId(userId, pageable).map(DataScheduling::new);
+    var barber = barberService.getBarberByUserId(userId);
+    return barber.map(value -> schedulingRepository.findByBarberId(value.getId(), pageable).map(DataScheduling::new))
+        .orElseGet(() -> schedulingRepository.findByUserId(userId, pageable).map(DataScheduling::new));
   }
 
   public DataScheduling getSchedulingById(UUID id) {

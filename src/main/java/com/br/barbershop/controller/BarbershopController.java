@@ -1,5 +1,6 @@
 package com.br.barbershop.controller;
 
+import com.br.barbershop.model.DTO.DataFindBarbershop;
 import com.br.barbershop.model.DTO.barber.BarbershopWithBarbers;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataRegisterBarbershop;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -88,6 +90,13 @@ public class BarbershopController {
   @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP', 'USER')")
   public ResponseEntity<DataBarbershop> getBarbershopById(@PathVariable UUID id) {
     DataBarbershop result = barbershopService.getDataBarbershopById(id);
+    return ResponseEntity.ok().body(result);
+  }
+
+  @GetMapping("find")
+  public ResponseEntity<List<Barbershop>> findByName(DataFindBarbershop dataFindBarbershop) {
+    List<Barbershop> result = barbershopService.findByName(dataFindBarbershop);
+
     return ResponseEntity.ok().body(result);
   }
 
