@@ -13,6 +13,8 @@ import com.br.barbershop.model.DTO.service.ListBarbershopService;
 import com.br.barbershop.model.entity.Barbershop;
 import com.br.barbershop.service.BarbershopService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("barbershop")
 @Controller
+@Slf4j
 public class BarbershopController {
 
   @Autowired
@@ -63,6 +66,12 @@ public class BarbershopController {
   public ResponseEntity<ListBarbershopService> getAllBarbershopServices(@PathVariable UUID id) {
     ListBarbershopService services = barbershopService.getAllBarbershopServices(id);
     return ResponseEntity.ok().body(services);
+  }
+
+  @GetMapping("document/{document}")
+  public ResponseEntity<DataBarbershopWithoudUser> getBarbershopByDocument(@PathVariable @Valid @CNPJ String document) {
+    DataBarbershopWithoudUser barbershop = barbershopService.getBarbershopByDocument(document);
+    return ResponseEntity.ok().body(barbershop);
   }
 
   @PutMapping("service/{id}")

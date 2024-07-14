@@ -4,7 +4,6 @@ import com.br.barbershop.model.DTO.scheduling.AllDataScheduling;
 import com.br.barbershop.model.DTO.scheduling.DataScheduling;
 import com.br.barbershop.model.DTO.scheduling.DataUpdateScheduling;
 import com.br.barbershop.model.DTO.scheduling.DateRegisterScheduling;
-import com.br.barbershop.service.RoleService;
 import com.br.barbershop.service.SchedulingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,5 @@
 package com.br.barbershop.repository;
 
-import com.br.barbershop.model.DTO.DataFindBarbershop;
-import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
 import com.br.barbershop.model.entity.Barbershop;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,5 +23,7 @@ public interface BarbershopRepository extends JpaRepository<Barbershop, UUID> {
 
   @Query("SELECT b FROM Barbershop b WHERE b.tradeName LIKE :tradeName")
   List<Barbershop> findByTradeName(@Param("tradeName") String tradeName);
+
+  Optional<Barbershop> findByDocument(String document);
 
 }

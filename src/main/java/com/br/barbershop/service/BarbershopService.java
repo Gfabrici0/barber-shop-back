@@ -69,6 +69,11 @@ public class BarbershopService {
       .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
   }
 
+  public DataBarbershopWithoudUser getBarbershopByDocument(String document) {
+    return barbershopRepository.findByDocument(document).map(DataBarbershopWithoudUser::new)
+      .orElseThrow(() -> new RuntimeException("Barbershop not Found"));
+  }
+
   public BarbershopWithBarbers getBarbersFromBarbershop(UUID id) {
     Barbershop barbershop = barbershopRepository.findById(id)
       .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
