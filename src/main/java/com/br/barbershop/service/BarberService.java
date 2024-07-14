@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -45,6 +47,10 @@ public class BarberService {
     Status status = statusService.findByStatus(StatusEnum.ACTIVE);
 
     return barberRepository.save(new Barber(barberRegisterDto, role, barbershop, status));
+  }
+
+  public Optional<Barber> getBarberByUserId(UUID userId) {
+    return barberRepository.findBarberByUserId(userId);
   }
 
   public Page<DataBarber> getAllBarbers(Pageable pageable) {

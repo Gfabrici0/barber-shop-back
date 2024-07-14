@@ -1,5 +1,6 @@
 package com.br.barbershop.controller;
 
+import com.br.barbershop.model.DTO.DataFindBarbershop;
 import com.br.barbershop.model.DTO.barber.BarbershopWithBarbers;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
 import com.br.barbershop.model.DTO.barbershop.DataRegisterBarbershop;
@@ -12,6 +13,8 @@ import com.br.barbershop.model.DTO.service.ListBarbershopService;
 import com.br.barbershop.model.entity.Barbershop;
 import com.br.barbershop.service.BarbershopService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +27,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("barbershop")
 @Controller
+@Slf4j
 public class BarbershopController {
 
   @Autowired
@@ -63,6 +68,12 @@ public class BarbershopController {
     return ResponseEntity.ok().body(services);
   }
 
+  @GetMapping("document/{document}")
+  public ResponseEntity<DataBarbershopWithoudUser> getBarbershopByDocument(@PathVariable @Valid @CNPJ String document) {
+    DataBarbershopWithoudUser barbershop = barbershopService.getBarbershopByDocument(document);
+    return ResponseEntity.ok().body(barbershop);
+  }
+
   @PutMapping("service/{id}")
   @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP')")
   public ResponseEntity<?> updateBarbershopService(@PathVariable UUID id, @RequestBody DataUpdateBarbershopService dataUpdateBarbershopService) {
@@ -88,6 +99,13 @@ public class BarbershopController {
   @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP', 'USER')")
   public ResponseEntity<DataBarbershop> getBarbershopById(@PathVariable UUID id) {
     DataBarbershop result = barbershopService.getDataBarbershopById(id);
+    return ResponseEntity.ok().body(result);
+  }
+
+  @GetMapping("find")
+  public ResponseEntity<List<Barbershop>> findByName(DataFindBarbershop dataFindBarbershop) {
+    List<Barbershop> result = barbershopService.findByName(dataFindBarbershop);
+
     return ResponseEntity.ok().body(result);
   }
 

@@ -4,6 +4,7 @@ import com.br.barbershop.enumeration.StatusEnum;
 import com.br.barbershop.enumeration.RoleEnum;
 import com.br.barbershop.exception.BarbershopNotFoundException;
 import com.br.barbershop.exception.ServiceNotFoundException;
+import com.br.barbershop.model.DTO.DataFindBarbershop;
 import com.br.barbershop.model.DTO.barber.BarberWithoutUser;
 import com.br.barbershop.model.DTO.barber.BarbershopWithBarbers;
 import com.br.barbershop.model.DTO.barbershop.DataBarbershop;
@@ -48,7 +49,7 @@ public class BarbershopService {
 
   public Barbershop registerBarbershop(DataRegisterBarbershop dataRegisterBarbershop) {
     Role role = roleService.findByRole(RoleEnum.ROLE_BARBERSHOP);
-    Status status = statusService.findByStatus(StatusEnum.PENDING_APPROVAL);
+    Status status = statusService.findByStatus(StatusEnum.ACTIVE);
     return barbershopRepository.save(new Barbershop(dataRegisterBarbershop, role, status));
   }
 
@@ -66,6 +67,11 @@ public class BarbershopService {
   public Barbershop getBarbershopById(UUID id) {
     return barbershopRepository.findByIdAndStatusId(id, StatusEnum.ACTIVE.getStatus())
       .orElseThrow(() -> new BarbershopNotFoundException("Barbershop not found"));
+  }
+
+  public DataBarbershopWithoudUser getBarbershopByDocument(String document) {
+    return barbershopRepository.findByDocument(document).map(DataBarbershopWithoudUser::new)
+      .orElseThrow(() -> new RuntimeException("Barbershop not Found"));
   }
 
   public BarbershopWithBarbers getBarbersFromBarbershop(UUID id) {
@@ -134,4 +140,7 @@ public class BarbershopService {
       .map(DataBarbershop::new);
   }
 
+    public List<Barbershop> findByName(DataFindBarbershop dataFindBarbershop) {
+    return barbershopRepository.findByTradeName(dataFindBarbershop.tradeName());
+  }
 }
