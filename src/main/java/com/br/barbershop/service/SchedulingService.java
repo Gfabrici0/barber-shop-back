@@ -33,7 +33,7 @@ public class SchedulingService {
     Barber barber = barberService.getBarberEntityById(dateRegisterScheduling.barberId());
     User user = userService.getActiveUserEntityById(dateRegisterScheduling.userId());
     Barbershop barbershop = barbershopService.getBarbershopById(dateRegisterScheduling.barbershopId());
-    com.br.barbershop.model.entity.Service service = barberService.getServiceByBarberId(dateRegisterScheduling.barberId());
+    com.br.barbershop.model.entity.Service service = barberService.getServiceByServiceId(dateRegisterScheduling.serviceId());
     SchedulingStatus status = schedulingStatusService.getSchedulingStatusByStatus(SchedulingStatusEnum.PENDING_BARBER_APPROVAL);
     Scheduling scheduling = schedulingRepository.save(new Scheduling(dateRegisterScheduling, status, user, barbershop, service, barber));
     return new DataScheduling(scheduling);

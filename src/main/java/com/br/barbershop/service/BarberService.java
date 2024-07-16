@@ -92,4 +92,9 @@ public class BarberService {
   public void deleteBarberService(UUID id) {
     serviceRepository.deleteById(id);
   }
+
+  public com.br.barbershop.model.entity.Service getServiceByServiceId(UUID uuid) {
+    return serviceRepository.findById(uuid)
+      .orElseThrow(() -> new ServiceNotFoundException("Service not found"));
+  }
 }
