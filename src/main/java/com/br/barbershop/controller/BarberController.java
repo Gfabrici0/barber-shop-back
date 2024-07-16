@@ -1,5 +1,6 @@
 package com.br.barbershop.controller;
 
+import com.br.barbershop.exception.BarberNotFoundException;
 import com.br.barbershop.model.DTO.barber.DataBarber;
 import com.br.barbershop.model.DTO.barber.DataRegisterBarber;
 import com.br.barbershop.model.DTO.service.DataService;
@@ -66,6 +67,13 @@ public class BarberController {
   @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP', 'USER')")
   public ResponseEntity<DataBarber> getBarberById(@PathVariable UUID id) {
     DataBarber result = barberService.getBarberById(id);
+    return ResponseEntity.ok().body(result);
+  }
+
+  @GetMapping("user/{userId}")
+  public ResponseEntity<DataBarber> getBarberByUserId(@PathVariable UUID userId) {
+    DataBarber result = barberService.getBarberByUserId(userId).map(DataBarber::new)
+      .orElseThrow(() -> new BarberNotFoundException("Barber not found"));
     return ResponseEntity.ok().body(result);
   }
 

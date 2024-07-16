@@ -1,10 +1,7 @@
 package com.br.barbershop.service;
 
 import com.br.barbershop.enumeration.SchedulingStatusEnum;
-import com.br.barbershop.model.DTO.scheduling.AllDataScheduling;
-import com.br.barbershop.model.DTO.scheduling.DataScheduling;
-import com.br.barbershop.model.DTO.scheduling.DataUpdateScheduling;
-import com.br.barbershop.model.DTO.scheduling.DateRegisterScheduling;
+import com.br.barbershop.model.DTO.scheduling.*;
 import com.br.barbershop.model.entity.*;
 import com.br.barbershop.repository.SchedulingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +52,16 @@ public class SchedulingService {
     return schedulingRepository.findByBarberId(barberId, pageable).map(DataScheduling::new);
   }
 
+  public Page<DataScheduling> getPendingSchedulingByUserBarberId(UUID userBarberId, Pageable pageable) {
+    SchedulingStatus scheduling = schedulingStatusService.getSchedulingStatusByStatus(SchedulingStatusEnum.PENDING_BARBER_APPROVAL);
+    return schedulingRepository.findByUserBarberIdWithPendingStatus(userBarberId, scheduling.getId(), pageable).map(DataScheduling::new);
+  }
+
+  public Page<DataScheduling> getPendingSchedulingByUserBarbershopId(UUID userBarbershopId, Pageable pageable) {
+    SchedulingStatus scheduling = schedulingStatusService.getSchedulingStatusByStatus(SchedulingStatusEnum.PENDING_BARBER_APPROVAL);
+    return schedulingRepository.findByUserBarbershopIdWithPendingStatus(userBarbershopId, scheduling.getId(), pageable).map(DataScheduling::new);
+  }
+
   public Page<DataScheduling> getSchedulingByUser(UUID userId, Pageable pageable) {
     var barber = barberService.getBarberByUserId(userId);
     return barber.map(value -> schedulingRepository.findByBarberId(value.getId(), pageable).map(DataScheduling::new))
@@ -78,6 +85,15 @@ public class SchedulingService {
 
   public void deleteScheduling(UUID id) {
     schedulingRepository.deleteById(id);
+  }
+
+  public void updateSchedulingStatus(UUID schedulingId, DataUpdateStatusScheduling dataUpdateStatusScheduling) {
+    System.out.println(dataUpdateStatusScheduling.status());
+    Scheduling scheduling = schedulingRepository.findById(schedulingId)
+      .orElseThrow(() -> new RuntimeException("Scheduling not found"));
+    SchedulingStatus status = schedulingStatusService.getSchedulingStatusByStatus(dataUpdateStatusScheduling.status());
+    scheduling.setStatus(status);
+    schedulingRepository.save(scheduling);
   }
 
 }
