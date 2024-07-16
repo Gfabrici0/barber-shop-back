@@ -102,9 +102,9 @@ public class BarbershopController {
     return ResponseEntity.ok().body(result);
   }
 
-  @GetMapping("find")
-  public ResponseEntity<List<Barbershop>> findByName(DataFindBarbershop dataFindBarbershop) {
-    List<Barbershop> result = barbershopService.findByName(dataFindBarbershop);
+  @GetMapping("find/{name}")
+  public ResponseEntity<List<DataBarbershop>> findByName(@PathVariable String name) {
+    List<DataBarbershop> result = barbershopService.findByName(name);
 
     return ResponseEntity.ok().body(result);
   }

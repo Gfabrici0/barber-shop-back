@@ -140,7 +140,9 @@ public class BarbershopService {
       .map(DataBarbershop::new);
   }
 
-    public List<Barbershop> findByName(DataFindBarbershop dataFindBarbershop) {
-    return barbershopRepository.findByTradeName(dataFindBarbershop.tradeName());
+    public List<DataBarbershop> findByName(String name) {
+    System.out.println(name);
+    return barbershopRepository.findByTradeName(name)
+      .stream().map(DataBarbershop::new).toList();
   }
 }

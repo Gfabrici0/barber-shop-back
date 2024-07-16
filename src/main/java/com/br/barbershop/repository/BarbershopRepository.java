@@ -21,7 +21,7 @@ public interface BarbershopRepository extends JpaRepository<Barbershop, UUID> {
   @Query("SELECT b FROM Barbershop b JOIN b.statusId s WHERE b.id = :id AND s.status = :status")
   Optional<Barbershop> findByIdAndStatusId(@Param("id") UUID id, @Param("status") String status);
 
-  @Query("SELECT b FROM Barbershop b WHERE b.tradeName LIKE :tradeName")
+  @Query("SELECT b FROM Barbershop b WHERE LOWER(b.tradeName) LIKE LOWER(CONCAT('%', :tradeName, '%'))")
   List<Barbershop> findByTradeName(@Param("tradeName") String tradeName);
 
   Optional<Barbershop> findByDocument(String document);
