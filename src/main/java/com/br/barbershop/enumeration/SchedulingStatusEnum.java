@@ -1,5 +1,7 @@
 package com.br.barbershop.enumeration;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +19,19 @@ public enum SchedulingStatusEnum {
   DONE("DONE");
 
   private String status;
+
+  @JsonCreator
+  public static SchedulingStatusEnum forValue(String value) {
+    for (SchedulingStatusEnum statusEnum : SchedulingStatusEnum.values()) {
+      if (statusEnum.getStatus().equals(value)) {
+        return statusEnum;
+      }
+    }
+    throw new IllegalArgumentException("Invalid status value: " + value);
+  }
+
+  @JsonValue
+  public String toValue() {
+    return getStatus();
+  }
 }

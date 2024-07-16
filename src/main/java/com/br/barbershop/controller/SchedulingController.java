@@ -1,9 +1,6 @@
 package com.br.barbershop.controller;
 
-import com.br.barbershop.model.DTO.scheduling.AllDataScheduling;
-import com.br.barbershop.model.DTO.scheduling.DataScheduling;
-import com.br.barbershop.model.DTO.scheduling.DataUpdateScheduling;
-import com.br.barbershop.model.DTO.scheduling.DateRegisterScheduling;
+import com.br.barbershop.model.DTO.scheduling.*;
 import com.br.barbershop.service.SchedulingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +51,28 @@ public class SchedulingController {
     return ResponseEntity.ok().body(dataScheduling);
   }
 
+  @GetMapping("barbershop/{id}/pending")
+  public ResponseEntity<Page<DataScheduling>> getPendingSchedulingByBarbershop(@PathVariable("id") UUID userBarbershopId, @PageableDefault(size = 10, sort = {"date"}) Pageable pageable) {
+    Page<DataScheduling> dataScheduling = schedulingService.getPendingSchedulingByUserBarbershopId(userBarbershopId, pageable);
+    return ResponseEntity.ok().body(dataScheduling);
+  }
+
+  @GetMapping("barber/{id}/pending")
+  public ResponseEntity<Page<DataScheduling>> getPendingSchedulingByBarber(@PathVariable("id") UUID userBarberId, @PageableDefault(size = 10, sort = {"date"}) Pageable pageable) {
+    Page<DataScheduling> dataScheduling = schedulingService.getPendingSchedulingByUserBarberId(userBarberId, pageable);
+    return ResponseEntity.ok().body(dataScheduling);
+  }
+
   @GetMapping("{id}")
   public ResponseEntity<DataScheduling> getSchedulingById(@PathVariable("id") UUID schedulingId) {
     DataScheduling dataScheduling = schedulingService.getSchedulingById(schedulingId);
     return ResponseEntity.ok().body(dataScheduling);
+  }
+
+  @PutMapping("{id}/status")
+  public ResponseEntity<Void> updateSchedulingStatus(@PathVariable("id") UUID schedulingId, @RequestBody @Valid DataUpdateStatusScheduling dataUpdateStatusScheduling) {
+    schedulingService.updateSchedulingStatus(schedulingId, dataUpdateStatusScheduling);
+    return ResponseEntity.noContent().build();
   }
 
   @PutMapping("{id}")

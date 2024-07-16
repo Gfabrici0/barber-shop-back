@@ -72,6 +72,12 @@ public class User implements UserDetails {
     if(dataUpdateUser.phoneNumber() != null && !dataUpdateUser.phoneNumber().isEmpty()){
       this.setPhoneNumber(dataUpdateUser.phoneNumber());
     }
+    if(dataUpdateUser.username() != null && !dataUpdateUser.username().isEmpty()){
+      this.setUsername(dataUpdateUser.username());
+    }
+    if(dataUpdateUser.password() != null && !dataUpdateUser.password().isEmpty()) {
+      this.setPassword(new BCryptPasswordEncoder().encode(dataUpdateUser.password()));
+    }
     if(dataUpdateUser.address() != null && !dataUpdateUser.address().isEmpty()) {
       for(DataUpdateAddress dataUpdateAddress : dataUpdateUser.address()) {
         this.userAddresses.stream().filter(
