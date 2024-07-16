@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -42,6 +43,12 @@ public class BarberController {
       .toUri();
 
     return ResponseEntity.created(location).body(new DataBarber(createdBarber));
+  }
+
+  @GetMapping("barbershop/{id}")
+  public ResponseEntity<Page<DataBarber>> getAllBarbersByShop(@PathVariable UUID id, @PageableDefault(size = 10, sort = {"id"}) Pageable pageable) {
+    var result = barberService.getBarbersByBarbershop(id, pageable);
+    return ResponseEntity.ok().body(result);
   }
 
   @GetMapping("service/barber/{id}")
@@ -85,4 +92,15 @@ public class BarberController {
     return ResponseEntity.noContent().build();
   }
 
+  @GetMapping("/{id}/availability")
+  @PreAuthorize("hasAnyRole('ADMIN', 'BARBERSHOP', 'USER')")
+  public ResponseEntity<?> getBarberAvailabilities(@PathVariable UUID id) {
+    var date = LocalDate.now();
+    var futureDate = LocalDate.now().plusDays(7);
+    var barberAvailabilities = barberService.getBarberAvailabilities(
+            id, date, futureDate
+    );
+
+    return ResponseEntity.ok().body(barberAvailabilities);
+  }
 }

@@ -1,6 +1,8 @@
 package com.br.barbershop.repository;
 
 import com.br.barbershop.model.entity.Barber;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Range;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +18,6 @@ public interface BarberRepository extends JpaRepository<Barber, UUID> {
   Optional<Barber> findBarberByUserEmail(@Param("email") String email);
   @Query("SELECT b FROM Barber b WHERE b.user.id = :id")
   Optional<Barber> findBarberByUserId(@Param("id") UUID id);
+  @Query("SELECT b FROM Barber b where b.barbershop.id = :id")
+  Page<Barber> findBarbersByBarberShop(@Param("id") UUID id, Pageable pageable);
 }

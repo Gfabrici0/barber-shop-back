@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -50,6 +52,12 @@ public class SchedulingService {
 
   public Page<DataScheduling> getSchedulingByBarber(UUID barberId, Pageable pageable) {
     return schedulingRepository.findByBarberId(barberId, pageable).map(DataScheduling::new);
+  }
+
+  public List<DataScheduling> getSchedulingByBarber(UUID barberId, LocalDate startDate, LocalDate endDate) {
+    var schedulings = schedulingRepository.findByBarberIdAndDate(barberId, startDate.atStartOfDay(), endDate.atStartOfDay());
+
+    return schedulings.stream().map(DataScheduling::new).toList();
   }
 
   public Page<DataScheduling> getPendingSchedulingByUserBarberId(UUID userBarberId, Pageable pageable) {
